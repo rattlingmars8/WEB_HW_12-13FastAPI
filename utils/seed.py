@@ -19,6 +19,7 @@ async def generate_contacts(num_contacts: int):
                 email=fake.email(),
                 phone=fake.phone_number(),
                 user_id=random.randint(1, 2),
+                # user_id=int(1),
                 b_day=fake.date_between(start_date="-90y", end_date="now"),
                 rest_data=random.choice([fake.text(max_nb_chars=300), None])
             )
@@ -33,7 +34,7 @@ async def seed_contacts():
     #     await connection.run_sync(Contact.metadata.drop_all)
     #     await connection.run_sync(Contact.metadata.create_all)
 
-    contacts = await generate_contacts(100)
+    contacts = await generate_contacts(400)
     async with async_session() as session:
         async with session.begin():
             for contact in contacts:

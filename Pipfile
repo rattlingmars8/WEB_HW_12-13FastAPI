@@ -22,6 +22,7 @@ fastapi-limiter = "*"
 redis = "*"
 
 [dev-packages]
+sphinx = "*"
 
 [requires]
 python_version = "3.11"

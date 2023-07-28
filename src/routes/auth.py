@@ -50,7 +50,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
     if not auth_service.check_password_hash(user.password, body.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
     # Generate tokens
-    access_token = await auth_service.create_access_token(data={"sub": user.email})
+    access_token = await auth_service.create_access_token(data={"sub": user.email}, expires_delta=3600)
     refresh_token_ = await auth_service.create_refresh_token(data={"sub": user.email})
     await user_repository.repo_update_refresh_token(user, refresh_token_, db=db)
     user_data = UserDBScheme(username=user.username, email=user.email, avatar=user.avatar)
@@ -130,7 +130,7 @@ async def reset_password(email: EmailStr, request: Request, bg_tasks: Background
 
 # TODO: finish set_new_password/
 @auth_router.post("/set_new_password/{token}",
-                  # dependencies=[Depends(RateLimiter(times=1, hours=1))]
+                  dependencies=[Depends(RateLimiter(times=1, hours=1))]
                   )
 async def set_new_password(token: str, new_password: str = Form(...), db: AsyncSession = Depends(get_db)):
     email = auth_service.get_email_from_reset_token(token)
@@ -146,7 +146,7 @@ async def set_new_password(token: str, new_password: str = Form(...), db: AsyncS
 
 
 @auth_router.get("/set_new_password/{token}",
-                 # dependencies=[Depends(RateLimiter(times=1, hours=1))]
+                 dependencies=[Depends(RateLimiter(times=1, hours=1))]
                  )
 async def reset_password_form(request: Request):
     return templates.TemplateResponse("reset_password_form.html", {"request": request})

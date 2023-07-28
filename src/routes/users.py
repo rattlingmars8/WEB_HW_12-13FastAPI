@@ -16,12 +16,78 @@ user_router = APIRouter()
 
 @user_router.get("/me", response_model=UserDBScheme)
 async def get_my_info(current_user: User = Depends(auth_service.get_current_user)):
+    """
+        Отримати інформацію про поточного користувача.
+
+        Ця функція виконує HTTP GET запит до шляху "/me" для отримання інформації про
+        поточного користувача, який автентифікований в системі.
+
+        Args:
+            current_user (User, залежність): Об'єкт користувача, отриманий залежністю
+                                             від функції auth_service.get_current_user.
+
+        Returns:
+            UserDBScheme: Об'єкт користувача, що містить інформацію про поточного користувача
+                          у форматі UserDBScheme.
+
+        Raises:
+            HTTPException(401): Виникає, якщо користувач не має дійсної аутентифікації
+                                або доступу до інформації.
+
+        Example:
+            Приклад успішного запиту та відповіді:
+            GET https://yourapi.com/me
+            Response:
+            {
+                 "username": "example_user",
+                 "email": "user@example.com",
+                 "avatar": "https://yourapi.com/static/avatars/avatar_example.jpg",
+            }
+        """
     return current_user
 
 
 @user_router.patch('/avatar', response_model=UserDBScheme)
 async def update_user_avatar(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
                              db: AsyncSession = Depends(get_db)):
+    """
+        Оновити аватар користувача.
+
+        Ця функція виконує HTTP PATCH запит до шляху "/avatar" для оновлення аватару
+        поточного користувача.
+
+        Args:
+            file (UploadFile, необов'язковий): Файл зображення для оновлення аватару.
+            current_user (User, залежність): Об'єкт користувача, отриманий залежністю
+                                             від функції auth_service.get_current_user.
+            db (AsyncSession, залежність): Асинхронна сесія бази даних для взаємодії з нею.
+
+        Returns:
+            UserDBScheme: Об'єкт користувача, який містить оновлену інформацію про користувача
+                          у форматі UserDBScheme.
+
+        Raises:
+            HTTPException(401): Виникає, якщо користувач не має дійсної аутентифікації
+                                або доступу до оновлення аватару.
+            HTTPException(400): Виникає, якщо файл зображення не надіслано або формат
+                                файлу не підтримується.
+
+        Example:
+             Приклад успішного запиту та відповіді:
+             PATCH https://yourapi.com/avatar
+             Request Body:
+             (file with image data)
+
+        Response:
+
+            {
+                 "username": "example_user",
+
+                 "email": "user@example.com",
+
+                 "avatar": "https://yourapi.com/static/avatars/avatar_example.jpg",
+            }
+        """
     cloudinary.config(
         cloud_name=settings.cloudinary_cloud_name,
         api_key=settings.cloudinary_api_key,

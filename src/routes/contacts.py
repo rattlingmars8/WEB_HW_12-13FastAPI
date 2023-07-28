@@ -73,7 +73,9 @@ async def get_contacts_query(
 
 
 # OK
-@router.get("/upcoming_birthdays/", tags=["contacts"], response_model=list[ContactResponse])
-async def get_upcoming_birthday_contacts(user: User = Depends(auth_service.get_current_user), limit: int = 100,
+@router.get("/upcoming_birthdays/", tags=["contacts"],
+            response_model=list[ContactResponse]
+            )
+async def get_upcoming_birthday_contacts(user: User = Depends(auth_service.get_current_user),
                                          db: AsyncSession = Depends(get_db)):
-    return await repo_get_upcoming_birthday_contacts(user=user, limit=limit, db=db)
+    return await repo_get_upcoming_birthday_contacts(user=user, db=db)
