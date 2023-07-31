@@ -36,7 +36,7 @@ async def get_specific_contact_belongs_to_user(id: int, user: User, db: AsyncSes
 
 
 # OK
-async def repo_get_contacts(db: AsyncSession, user: User, limit: int, offset: int):
+async def repo_get_contacts(db: AsyncSession, user: User, limit: int, offset: int) -> list[Contact]:
     """
         Отримати список контактів користувача.
 

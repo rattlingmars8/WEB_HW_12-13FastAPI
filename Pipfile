@@ -24,6 +24,7 @@ redis = "*"
 [dev-packages]
 sphinx = "*"
 pytest = "*"
+pytest-asyncio = "*"
 pytest-cov = "*"
 
 [requires]
@@ -31,4 +32,4 @@ python_version = "3.11"
 python_full_version = "3.11.4"
 
 [tool]
-pytest = {ini_options = pythonpath = ["."]}
+pytest = {ini_options={pythonpath = ["."]}}
