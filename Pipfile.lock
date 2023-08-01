@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "95987a55fa3a6260861474fc506d8644833f04ededdb63004851d495ef1a7ca9"
+            "sha256": "c561795b49b12cebb276aff406c6d2fb01440332f0cfb648a16a4c2cceefb69d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -24,6 +24,14 @@
             ],
             "markers": "python_version >= '3.7' and python_version < '4.0'",
             "version": "==2.0.2"
+        },
+        "aiosqlite": {
+            "hashes": [
+                "sha256:95ee77b91c8d2808bd08a59fbebf66270e9090c3d92ffbf260dc0db0b979577d",
+                "sha256:edba222e03453e094a3ce605db1b970c4b3376264e56f32e2a4959f948d66a96"
+            ],
+            "index": "pypi",
+            "version": "==0.19.0"
         },
         "alembic": {
             "hashes": [
@@ -282,6 +290,22 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.14.0"
+        },
+        "httpcore": {
+            "hashes": [
+                "sha256:a6f30213335e34c1ade7be6ec7c47f19f50c56db36abef1a9dfa3815b1cb3888",
+                "sha256:c2789b767ddddfa2a5782e3199b2b7f6894540b17b16ec26b2c4d8e103510b87"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==0.17.3"
+        },
+        "httpx": {
+            "hashes": [
+                "sha256:06781eb9ac53cde990577af654bd990a4949de37a28bdb4a230d434f3a30b9bd",
+                "sha256:5853a43053df830c20f8110c5e69fe44d035d850b2dfe795e196f00fdb774bdd"
+            ],
+            "index": "pypi",
+            "version": "==0.24.1"
         },
         "idna": {
             "hashes": [

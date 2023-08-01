@@ -30,9 +30,9 @@ async def generate_contacts(num_contacts: int):
 
 
 async def seed_contacts():
-    # async with engine.begin() as connection:
-    #     await connection.run_sync(Contact.metadata.drop_all)
-    #     await connection.run_sync(Contact.metadata.create_all)
+    async with engine.begin() as connection:
+        await connection.run_sync(Contact.metadata.drop_all)
+        await connection.run_sync(Contact.metadata.create_all)
 
     contacts = await generate_contacts(400)
     async with async_session() as session:
