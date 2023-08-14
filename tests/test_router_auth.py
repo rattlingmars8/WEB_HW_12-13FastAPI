@@ -1,7 +1,12 @@
+import datetime
+
 import pytest
 from unittest.mock import MagicMock
 
-from src.schemas.User_Schemas import UserCreationResponse
+from libgravatar import Gravatar
+
+from src.DB.models import User
+from src.schemas.User_Schemas import UserCreationResponse, UserDBScheme
 
 
 # @pytest.mark.usefixtures("db")  # Використовуємо фікстуру db перед запуском тесту
@@ -16,6 +21,35 @@ async def test_register_user(client, user, monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_register_user_successful(client, user, monkeypatch):
+    # Мокуємо функції для імітації успішної реєстрації
+    async def mock_repo_user_authentication_by_email(email, db):
+        return None
+
+    async def mock_repo_create_user(body, db):
+        g = Gravatar(email=user["email"])
+        avatar_img_url = g.get_image()
+        return User(**user,
+                    created_at=datetime.datetime.utcnow(),
+                    avatar=avatar_img_url,
+                    refresh_token="refresh.token"
+                    )
+
+    monkeypatch.setattr("src.repository.users_repo.repo_user_authentication_by_email",
+                        mock_repo_user_authentication_by_email)
+    monkeypatch.setattr("src.repository.users_repo.repo_create_user",
+                        mock_repo_create_user)
+
+    response = client.post("/auth/register", json=user)
+
+    assert response.status_code == 201
+    assert response.json()["message"] == "Your account created successfully. Check your email to activate it."
+    assert response.json()["email"] == user["email"]
+    assert response.json()["username"] == user["username"]
+    # Перевірка, чи було викликано функцію send_email
+    # assert len(client.background_tasks) == 1
+
+@pytest.mark.asyncio
 async def test_register_user_existing_email(client, user, monkeypatch):
     # Мокуємо функцію, що повертає існуючого користувача
     async def mock_repo_user_authentication_by_email(email, db):
@@ -28,25 +62,3 @@ async def test_register_user_existing_email(client, user, monkeypatch):
 
     assert response.status_code == 409
     assert "Email already exists. Try to log in." in response.json()["detail"]
-
-
-# @pytest.mark.asyncio
-# async def test_register_user_new_email(client, user, monkeypatch):
-#     # Мокуємо функцію, що повертає неіснуючого користувача
-#     async def mock_repo_user_authentication_by_email(email, db):
-#         return None
-#
-#     monkeypatch.setattr("src.repository.users_repo.repo_user_authentication_by_email",
-#                         mock_repo_user_authentication_by_email)
-#
-#     # Мокуємо функцію, яка завжди успішно зберігає користувача
-#     async def mock_repo_create_user(body, db):
-#         return UserCreationResponse(**user,
-#                                     message="Your account created successfully. Check your email to activate it.")
-#
-#     monkeypatch.setattr("src.repository.users_repo.repo_create_user", mock_repo_create_user)
-#
-#     response = client.post("/auth/register", json=user)
-#
-#     assert response.status_code == 201
-#     assert response.json()["email"] == user["email"]
