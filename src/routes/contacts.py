@@ -31,7 +31,8 @@ async def get_contact_by_id(id: int, user: User = Depends(auth_service.get_curre
 
 # OK
 @router.post("/", tags=["contacts"], response_model=ContactResponse, status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(RateLimiter(times=2, seconds=5))])
+             # dependencies=[Depends(RateLimiter(times=2, seconds=5))]
+             )
 async def create_new_contact(body: ContactCreate, user: User = Depends(auth_service.get_current_user),
                              db: AsyncSession = Depends(get_db)):
     return await repo_create_new_contact(user=user, body=body, db=db)

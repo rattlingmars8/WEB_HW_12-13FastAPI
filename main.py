@@ -14,10 +14,10 @@ from src.routes.users import user_router
 app = FastAPI()
 
 
-@app.on_event("startup")
-async def startup():
-    r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0)
-    await FastAPILimiter.init(r)
+# @app.on_event("startup")
+# async def startup():
+#     r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0)
+#     await FastAPILimiter.init(r)
 
 
 app.add_middleware(
